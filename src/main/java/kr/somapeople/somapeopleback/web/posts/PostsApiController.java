@@ -39,14 +39,14 @@ public class PostsApiController {
 
     @Operation(summary = "게시글 무한 스크롤 불러오기")
     @GetMapping()
-    public List<PostsResponseDto> getPostsLowerThanId(@RequestParam Long boardId, @RequestParam Long lastPostId, @RequestParam int size) {
-        return postsService.fetchPostPagesBy(boardId, lastPostId, size);
+    public List<PostsResponseDto> getPostsLowerThanId(@RequestParam Long boardId, @RequestParam Long lastPostId, @RequestParam int size, @RequestParam Long userId) {
+        return postsService.fetchPostPagesBy(boardId, lastPostId, size, userId);
     }
 
     @Operation(summary = "게시글 검색하기")
     @GetMapping("/search")
-    public List<PostsResponseDto> getSearchedPosts(@RequestParam String searchTerm, @RequestParam Long boardIdToSearch) {
-        return postsService.searchPosts(searchTerm, boardIdToSearch);
+    public List<PostsResponseDto> getSearchedPosts(@RequestParam String searchTerm, @RequestParam Long boardIdToSearch, @RequestParam Long userId) {
+        return postsService.searchPosts(searchTerm, boardIdToSearch, userId);
     }
 
     @Operation(summary = "유저가 작성한 게시글 모두 불러오기")

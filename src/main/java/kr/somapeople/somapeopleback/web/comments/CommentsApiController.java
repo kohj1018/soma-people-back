@@ -33,8 +33,8 @@ public class CommentsApiController {
 
     @Operation(summary = "게시글에 달린 댓글 모두 불러오기")
     @GetMapping()
-    public List<CommentsResponseDto> findAllCommentsOnPost(@RequestParam Long postId) {
-        return commentsService.findAllCommentsOnPost(postId);
+    public List<CommentsResponseDto> findAllCommentsOnPost(@RequestParam Long postId, @RequestParam Long userId) {
+        return commentsService.findAllCommentsOnPost(postId, userId);
     }
 
     @Operation(summary = "유저가 작성한 댓글 모두 불러오기")

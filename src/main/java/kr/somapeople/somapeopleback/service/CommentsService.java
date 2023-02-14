@@ -1,5 +1,6 @@
 package kr.somapeople.somapeopleback.service;
 
+import kr.somapeople.somapeopleback.domain.blockUserLogs.BlockUserLogsRepository;
 import kr.somapeople.somapeopleback.domain.comments.Comments;
 import kr.somapeople.somapeopleback.domain.comments.CommentsRepository;
 import kr.somapeople.somapeopleback.domain.posts.Posts;
@@ -23,6 +24,7 @@ public class CommentsService {
     private final CommentsRepository commentsRepository;
     private final PostsRepository postsRepository;
     private final UsersRepository usersRepository;
+    private final BlockUserLogsRepository blockUserLogsRepository;
 
     @Transactional
     public Long save(CommentsSaveRequestDto requestDto) {
@@ -45,8 +47,10 @@ public class CommentsService {
         return commentId;
     }
 
-    public List<CommentsResponseDto> findAllCommentsOnPost(Long postId) {
-        List<Comments> entityList = commentsRepository.findAllCommentsOnPost(postId);
+    public List<CommentsResponseDto> findAllCommentsOnPost(Long postId, Long userId) {
+        List<Long> blockUserIdList = blockUserLogsRepository.getAllBlockUserIdByUser(userId);
+
+        List<Comments> entityList = commentsRepository.findAllCommentsOnPost(postId, blockUserIdList);
 
         return entityList.stream()
                 .map(CommentsResponseDto::new)

@@ -1,5 +1,6 @@
 package kr.somapeople.somapeopleback.service;
 
+import kr.somapeople.somapeopleback.domain.blockUserLogs.BlockUserLogsRepository;
 import kr.somapeople.somapeopleback.domain.boards.Boards;
 import kr.somapeople.somapeopleback.domain.boards.BoardsRepository;
 import kr.somapeople.somapeopleback.domain.posts.Posts;
@@ -27,6 +28,7 @@ public class PostsService {
     private final PostsRepository postsRepository;
     private final BoardsRepository boardsRepository;
     private final UsersRepository usersRepository;
+    private final BlockUserLogsRepository blockUserLogsRepository;
 
     @Transactional
     public Long save(PostsSaveRequestDto requestDto) {
@@ -70,9 +72,11 @@ public class PostsService {
         return new PostsResponseDto(entity);
     }
 
-    public List<PostsResponseDto> fetchPostPagesBy(Long boardId, Long lastPostId, int size) {
+    public List<PostsResponseDto> fetchPostPagesBy(Long boardId, Long lastPostId, int size, Long userId) {
+        List<Long> blockUserIdList = blockUserLogsRepository.getAllBlockUserIdByUser(userId);   // user가 차단한 유저들 id 목록을 불러옴
+
         PageRequest pageRequest = PageRequest.of(0, size);
-        Page<Posts> entityPage = postsRepository.findByPostIdLessThanOrderByPostIdDesc(boardId, lastPostId, pageRequest);
+        Page<Posts> entityPage = postsRepository.findByPostIdLessThanOrderByPostIdDesc(boardId, lastPostId, blockUserIdList, pageRequest);
         List<Posts> entityList = entityPage.getContent();
 
         return entityList.stream()
@@ -80,7 +84,9 @@ public class PostsService {
                 .collect(Collectors.toList());
     }
 
-    public List<PostsResponseDto> searchPosts(String searchTerm, Long boardIdToSearch) {
+    public List<PostsResponseDto> searchPosts(String searchTerm, Long boardIdToSearch, Long userId) {
+        List<Long> blockUserIdList = blockUserLogsRepository.getAllBlockUserIdByUser(userId);   // user가 차단한 유저들 id 목록을 불러옴
+
         // 공백, 쉼표, 하이픈을 기준으로 split
         String[] searchTermList = searchTerm.split("\\s|,|-");
 
@@ -90,9 +96,9 @@ public class PostsService {
         for (String term : searchTermList) {
             List<Posts> entityList = new ArrayList<>();
             if (boardIdToSearch < 1) {  // boardId가 1보다 작은 경우 전체 게시판 검색을 의미
-                entityList = postsRepository.searchAllPosts(term);
+                entityList = postsRepository.searchAllPosts(term, blockUserIdList);
             } else {
-                entityList = postsRepository.searchPostsWithinGivenBoard(term, boardIdToSearch);
+                entityList = postsRepository.searchPostsWithinGivenBoard(term, boardIdToSearch, blockUserIdList);
             }
 
             if (!entityList.isEmpty()) {
