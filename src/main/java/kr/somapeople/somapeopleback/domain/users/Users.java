@@ -53,4 +53,9 @@ public class Users extends BaseTimeEntity {
         this.agreeTerms = agreeTerms;
         this.isDelete = isDelete;
     }
+
+    public void update(String name, Boolean isDelete) {
+        this.name = name;
+        this.isDelete = isDelete;
+    }
 }
