@@ -35,7 +35,6 @@ public class UsersRepositoryTest {
         String oauthId = "djakslfjdslkacdsfadsfdsadsfac";
         String refreshToken = "cdjalskjfckdlsajvkadsklcjdklasjkj";
         Boolean agreeTerms = true;
-        Boolean isDelete = false;
 
         usersRepository.save(Users.builder()
                 .name(name)
@@ -45,7 +44,6 @@ public class UsersRepositoryTest {
                 .oauthId(oauthId)
                 .refreshToken(refreshToken)
                 .agreeTerms(agreeTerms)
-                .isDelete(isDelete)
                 .build());
 
         //when
@@ -60,7 +58,6 @@ public class UsersRepositoryTest {
         assertThat(user.getOauthId()).isEqualTo(oauthId);
         assertThat(user.getRefreshToken()).isEqualTo(refreshToken);
         assertThat(user.getAgreeTerms()).isEqualTo(agreeTerms);
-        assertThat(user.getIsDelete()).isEqualTo(isDelete);
         assertThat(user.getCreatedAt()).isBefore(LocalDateTime.now());
     }
 }

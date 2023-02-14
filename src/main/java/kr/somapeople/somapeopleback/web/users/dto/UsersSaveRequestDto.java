@@ -36,7 +36,6 @@ public class UsersSaveRequestDto {
                 .oauthId(oauthId)
                 .refreshToken(refreshToken)
                 .agreeTerms(agreeTerms)
-                .isDelete(false)
                 .build();
     }
 }

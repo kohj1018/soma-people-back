@@ -5,7 +5,6 @@ import kr.somapeople.somapeopleback.domain.users.Users;
 import kr.somapeople.somapeopleback.domain.users.UsersRepository;
 import kr.somapeople.somapeopleback.web.users.dto.UsersSaveRequestDto;
 import kr.somapeople.somapeopleback.web.users.dto.UsersUpdateRequestDto;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -94,7 +93,6 @@ class UsersApiControllerTest {
                 .oauthId("djakslfjdslkacdsfadsfdsadsfac")
                 .refreshToken("cdjalskjfckdlsajvkadsklcjdklasjkj")
                 .agreeTerms(true)
-                .isDelete(false)
                 .build());
 
         String updateOauthId = savedUser.getOauthId();

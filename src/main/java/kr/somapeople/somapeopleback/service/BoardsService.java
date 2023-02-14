@@ -16,6 +16,7 @@ public class BoardsService {
 
     public List<BoardsResponseDto> findAll() {
        return boardsRepository.findAll().stream()
-               .map(BoardsResponseDto::new).collect(Collectors.toList());
+               .map(BoardsResponseDto::new)
+               .collect(Collectors.toList());
     }
 }

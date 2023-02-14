@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class UsersResponseDto {
+    private Long userId;
     private String name;
     private String userType;
     private Integer cardinalNum;
@@ -14,6 +15,7 @@ public class UsersResponseDto {
     private Boolean isDelete;
 
     public UsersResponseDto(Users entity) {
+        this.userId = entity.getUserId();
         this.name = entity.getName();
         this.userType = entity.getUserType();
         this.cardinalNum = entity.getCardinalNum();

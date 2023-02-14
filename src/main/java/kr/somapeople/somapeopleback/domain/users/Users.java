@@ -1,11 +1,14 @@
 package kr.somapeople.somapeopleback.domain.users;
 
 import kr.somapeople.somapeopleback.domain.BaseTimeEntity;
+import kr.somapeople.somapeopleback.domain.posts.Posts;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -42,8 +45,11 @@ public class Users extends BaseTimeEntity {
     @Column(name = "is_delete", nullable = false)
     private Boolean isDelete;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")   // posts와의 양방향 매핑을 위해 추가
+    private List<Posts> postsList = new ArrayList<>();
+
     @Builder
-    public Users(String name, String userType, int cardinalNum, Boolean isCertified, String oauthId, String refreshToken, Boolean agreeTerms, Boolean isDelete) {
+    public Users(String name, String userType, int cardinalNum, Boolean isCertified, String oauthId, String refreshToken, Boolean agreeTerms) {
         this.name = name;
         this.userType = userType;
         this.cardinalNum = cardinalNum;
@@ -51,7 +57,7 @@ public class Users extends BaseTimeEntity {
         this.oauthId = oauthId;
         this.refreshToken = refreshToken;
         this.agreeTerms = agreeTerms;
-        this.isDelete = isDelete;
+        this.isDelete = false;
     }
 
     public void update(String name, Boolean isDelete) {
