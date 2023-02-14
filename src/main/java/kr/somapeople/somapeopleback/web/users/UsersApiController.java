@@ -9,7 +9,7 @@ import kr.somapeople.somapeopleback.web.users.dto.UsersUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "users", description = "유저 관련 api 입니다.")
+@Tag(name = "Users", description = "유저 관련 api 입니다.")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/users")
@@ -29,7 +29,7 @@ public class UsersApiController {
         return usersService.update(oauthId, requestDto);
     }
 
-    @Operation(summary = "UserId로 유저 정보 불러오기")
+    @Operation(summary = "userId로 유저 정보 불러오기")
     @GetMapping("/{userId}")
     public UsersResponseDto findById(@PathVariable Long userId) {
         return usersService.findById(userId);

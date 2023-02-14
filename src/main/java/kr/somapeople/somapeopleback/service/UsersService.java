@@ -17,7 +17,7 @@ public class UsersService {
 
     @Transactional
     public Long save(UsersSaveRequestDto requestDto) {
-        return usersRepository.save(requestDto.toEntity()).getId();
+        return usersRepository.save(requestDto.toEntity()).getUserId();
     }
 
     @Transactional
@@ -27,7 +27,7 @@ public class UsersService {
 
         user.update(requestDto.getName(), requestDto.getIsDelete());
 
-        return user.getId();
+        return user.getUserId();
     }
 
     public UsersResponseDto findById(Long userId) {

@@ -16,7 +16,7 @@ public class Users extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Long id;
+    private Long userId;
 
     @Column(length = 20, nullable = false)
     private String name;
