@@ -1,3 +1,5 @@
+package kr.somapeople.somapeopleback;
+
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import org.springdoc.core.GroupedOpenApi;
@@ -21,6 +23,6 @@ public class SwaggerConfig {
                 .info(new Info()
                         .title("SomaPeople API")
                         .description("소마인(SomaPeople) 프로젝트 API 명세서입니다.")
-                        .version("v0.0.1"));
+                        .version("v0.1.0"));
     }
 }
