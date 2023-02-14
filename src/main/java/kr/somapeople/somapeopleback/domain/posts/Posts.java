@@ -2,12 +2,15 @@ package kr.somapeople.somapeopleback.domain.posts;
 
 import kr.somapeople.somapeopleback.domain.BaseTimeEntity;
 import kr.somapeople.somapeopleback.domain.boards.Boards;
+import kr.somapeople.somapeopleback.domain.comments.Comments;
 import kr.somapeople.somapeopleback.domain.users.Users;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -43,6 +46,9 @@ public class Posts extends BaseTimeEntity {
     @Column(name = "is_delete", nullable = false)
     private Boolean isDelete;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post")   // Comments와의 양방향 매핑을 위해 추가
+    private List<Comments> commentsList = new ArrayList<>();
+
     @Builder
     public Posts(Boards board, Users user, String title, String content, Boolean isAnonymous) {
         this.board = board;
@@ -60,5 +66,11 @@ public class Posts extends BaseTimeEntity {
         this.content = content;
         this.isAnonymous = isAnonymous;
         this.isDelete = isDelete;
+    }
+
+    public void addHits(Long postAuthorId, Long userId) {
+        if (!postAuthorId.equals(userId)) { // 글 작성자가 조회하는 경우는 조회수 증가 안함
+            this.hits += 1;
+        }
     }
 }

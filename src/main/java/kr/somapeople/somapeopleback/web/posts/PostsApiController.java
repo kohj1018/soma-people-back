@@ -54,4 +54,10 @@ public class PostsApiController {
     public List<PostsResponseDto> findByUserId(@PathVariable Long userId) {
         return postsService.findByUserId(userId);
     }
+
+    @Operation(summary = "조회수 1만큼 증가")
+    @PutMapping("/hits/{postId}")
+    public void addHits(@PathVariable Long postId, @RequestParam Long userId) {
+        postsService.addHits(postId, userId);
+    }
 }

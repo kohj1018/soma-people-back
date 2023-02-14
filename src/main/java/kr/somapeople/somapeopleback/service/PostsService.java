@@ -52,6 +52,17 @@ public class PostsService {
         return post.getPostId();
     }
 
+    @Transactional
+    public void addHits(Long postId, Long userId) {
+        Posts post = postsRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id=" + postId));
+
+        Users user = usersRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다. userId=" + userId));
+
+        post.addHits(post.getUser().getUserId(), user.getUserId());
+    }
+
     public PostsResponseDto findById(Long postId) {
         Posts entity = postsRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id=" + postId));

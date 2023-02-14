@@ -4,6 +4,8 @@ import kr.somapeople.somapeopleback.domain.users.Users;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @NoArgsConstructor
 public class UsersResponseDto {
@@ -13,6 +15,8 @@ public class UsersResponseDto {
     private Integer cardinalNum;
     private Boolean isCertified;
     private Boolean isDelete;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public UsersResponseDto(Users entity) {
         this.userId = entity.getUserId();
@@ -21,5 +25,7 @@ public class UsersResponseDto {
         this.cardinalNum = entity.getCardinalNum();
         this.isCertified = entity.getIsCertified();
         this.isDelete = entity.getIsDelete();
+        this.createdAt = entity.getCreatedAt();
+        this.updatedAt = entity.getUpdatedAt();
     }
 }
