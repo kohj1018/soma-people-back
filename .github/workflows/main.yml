@@ -11,7 +11,6 @@ on:
   workflow_dispatch:
 
 env:
-  APPLICATION_NAME: soma-people-back
   S3_BUCKET_NAME: soma-people-build
   AWS_REGION: ap-northeast-2
   CODEDEPLOY_NAME: soma-people-codedeploy
@@ -48,7 +47,7 @@ jobs:
           cp build/libs/*.jar before-deploy/
           cd before-deploy && zip -r before-deploy *                         # before-deploy로 이동 후 전체 압축
           cd ../ && mkdir -p deploy                                          # 상위 디렉토리로 이동 후 deploy 디렉토리 생성
-          mv before-deploy/before-deploy.zip deploy/$APPLICATION_NAME.zip    # deploy로 zip파일 이동
+          mv before-deploy/before-deploy.zip deploy/soma-people-back.zip    # deploy로 zip파일 이동
         
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -58,7 +57,7 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
       
       - name: Upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./deploy/$APPLICATION_NAME.zip s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip
+        run: aws s3 cp --region ap-northeast-2 ./deploy/soma-people-back.zip s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip
       
       - name: Code Deploy
         run: aws deploy create-deployment
