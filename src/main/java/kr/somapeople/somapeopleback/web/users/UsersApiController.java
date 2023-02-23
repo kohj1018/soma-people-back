@@ -34,4 +34,10 @@ public class UsersApiController {
     public UsersResponseDto findById(@PathVariable Long userId) {
         return usersService.findById(userId);
     }
+
+    @Operation(summary = "oauthId로 userId 불러오기")
+    @GetMapping("/findUserId/{oauthId}")
+    public Long findUserIdByOauthId(@PathVariable String oauthId) {
+        return usersService.findUserIdByOauthId(oauthId);
+    }
 }

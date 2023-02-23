@@ -8,7 +8,7 @@ import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@OpenAPIDefinition(servers = {@Server(url = "https://somapeople.xyz", description = "SomaPeople 공식 서버 URL")})
+@OpenAPIDefinition(servers = {@Server(url = "https://www.somapeople.xyz", description = "SomaPeople 공식 서버 URL")})
 @Configuration
 public class SwaggerConfig {
 
