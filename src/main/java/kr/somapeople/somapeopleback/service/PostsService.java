@@ -135,9 +135,9 @@ public class PostsService {
     public MainPagePostsResponseDto getPostFromEachBoard(Long userId) {
         List<Long> blockUserIdList = blockUserLogsRepository.getAllBlockUserIdByUser(userId);   // user가 차단한 유저들 id 목록을 불러옴
 
-        List<Posts> qnaPostEntityList = postsRepository.findByBoard("Q&A", blockUserIdList);
-        List<Posts> freePostEntityList = postsRepository.findByBoard("자유게시판", blockUserIdList);
-        List<Posts> applicantPostEntityList = postsRepository.findByBoard("14기 준비", blockUserIdList);
+        List<Posts> qnaPostEntityList = postsRepository.findByBoard(2L, blockUserIdList, PageRequest.of(0, 5));
+        List<Posts> freePostEntityList = postsRepository.findByBoard(1L, blockUserIdList, PageRequest.of(0, 5));
+        List<Posts> applicantPostEntityList = postsRepository.findByBoard(4L, blockUserIdList, PageRequest.of(0, 5));
 
         return new MainPagePostsResponseDto(
                 qnaPostEntityList.stream()

@@ -25,6 +25,6 @@ public interface PostsRepository extends JpaRepository<Posts, Long> {
     @Query(value = "SELECT p FROM Posts p WHERE p.user.userId = ?1 AND p.isDelete = false ORDER BY p.postId DESC")
     List<Posts> findByUserId(Long userId);
 
-    @Query(value = "SELECT p FROM Posts p WHERE p.board.name = ?1 AND p.isDelete = false AND p.user.userId NOT IN ?2 ORDER BY p.postId DESC LIMIT 5")
-    List<Posts> findByBoard(String board, List<Long> blockUserIdList);
+    @Query(value = "SELECT p FROM Posts p WHERE p.board.boardId = ?1 AND p.isDelete = false AND p.user.userId NOT IN ?2 ORDER BY p.postId DESC")
+    List<Posts> findByBoard(Long boardId, List<Long> blockUserIdList, PageRequest pageRequest);
 }
