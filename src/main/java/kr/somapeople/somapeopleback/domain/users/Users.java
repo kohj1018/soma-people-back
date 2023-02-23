@@ -35,10 +35,10 @@ public class Users extends BaseTimeEntity {
     @Column(name = "is_certified", nullable = false)
     private Boolean isCertified;
 
-    @Column(name = "oauth_id", length = 100, nullable = false)
+    @Column(name = "oauth_id", nullable = false)
     private String oauthId;
 
-    @Column(name = "refresh_token", length = 100, nullable = false)
+    @Column(name = "refresh_token", nullable = false)
     private String refreshToken;
 
     @Column(name = "agree_terms", nullable = false)
