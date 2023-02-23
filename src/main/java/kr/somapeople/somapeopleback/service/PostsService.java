@@ -7,6 +7,7 @@ import kr.somapeople.somapeopleback.domain.posts.Posts;
 import kr.somapeople.somapeopleback.domain.posts.PostsRepository;
 import kr.somapeople.somapeopleback.domain.users.Users;
 import kr.somapeople.somapeopleback.domain.users.UsersRepository;
+import kr.somapeople.somapeopleback.web.posts.dto.MainPagePostsResponseDto;
 import kr.somapeople.somapeopleback.web.posts.dto.PostsResponseDto;
 import kr.somapeople.somapeopleback.web.posts.dto.PostsSaveRequestDto;
 import kr.somapeople.somapeopleback.web.posts.dto.PostsUpdateRequestDto;
@@ -129,5 +130,25 @@ public class PostsService {
         return entityList.stream()
                 .map(PostsResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    public MainPagePostsResponseDto getPostFromEachBoard(Long userId) {
+        List<Long> blockUserIdList = blockUserLogsRepository.getAllBlockUserIdByUser(userId);   // user가 차단한 유저들 id 목록을 불러옴
+
+        List<Posts> qnaPostEntityList = postsRepository.findByBoard("Q&A", blockUserIdList);
+        List<Posts> freePostEntityList = postsRepository.findByBoard("자유게시판", blockUserIdList);
+        List<Posts> applicantPostEntityList = postsRepository.findByBoard("14기 준비", blockUserIdList);
+
+        return new MainPagePostsResponseDto(
+                qnaPostEntityList.stream()
+                        .map(PostsResponseDto::new)
+                        .collect(Collectors.toList()),
+                freePostEntityList.stream()
+                        .map(PostsResponseDto::new)
+                        .collect(Collectors.toList()),
+                applicantPostEntityList.stream()
+                        .map(PostsResponseDto::new)
+                        .collect(Collectors.toList())
+        );
     }
 }

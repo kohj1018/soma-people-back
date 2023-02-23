@@ -3,6 +3,7 @@ package kr.somapeople.somapeopleback.web.posts;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.somapeople.somapeopleback.service.PostsService;
+import kr.somapeople.somapeopleback.web.posts.dto.MainPagePostsResponseDto;
 import kr.somapeople.somapeopleback.web.posts.dto.PostsResponseDto;
 import kr.somapeople.somapeopleback.web.posts.dto.PostsSaveRequestDto;
 import kr.somapeople.somapeopleback.web.posts.dto.PostsUpdateRequestDto;
@@ -59,5 +60,11 @@ public class PostsApiController {
     @PutMapping("/hits/{postId}")
     public void addHits(@PathVariable Long postId, @RequestParam Long userId) {
         postsService.addHits(postId, userId);
+    }
+
+    @Operation(summary = "메인 페이지 - 각 게시판 글 5개씩 가져오기")
+    @GetMapping("/main")
+    public MainPagePostsResponseDto getPostFromEachBoard(@RequestParam Long userId) {
+        return postsService.getPostFromEachBoard(userId);
     }
 }
