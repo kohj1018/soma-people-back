@@ -18,6 +18,7 @@ public class PostsResponseDto {
     private String content;
     private Boolean isAnonymous;
     private Long hits;
+    private int commentsNum;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -29,6 +30,7 @@ public class PostsResponseDto {
         this.content = entity.getContent();
         this.isAnonymous = entity.getIsAnonymous();
         this.hits = entity.getHits();
+        this.commentsNum = entity.getCommentsList().size();
         this.createdAt = entity.getCreatedAt();
         this.updatedAt = entity.getUpdatedAt();
     }
