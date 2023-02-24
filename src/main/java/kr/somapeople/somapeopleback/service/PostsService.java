@@ -76,6 +76,10 @@ public class PostsService {
     public List<PostsResponseDto> fetchPostPagesBy(Long boardId, Long lastPostId, int size, Long userId) {
         List<Long> blockUserIdList = blockUserLogsRepository.getAllBlockUserIdByUser(userId);   // user가 차단한 유저들 id 목록을 불러옴
 
+        if (blockUserIdList.isEmpty()) {    // TODO : SQL의 NOT IN에 빈 리스트가 들어가면 값 반환이 안돼 0을 추가해줌. (임시 해결책이라 추후 NOT IN 대신 LEFT JOIN을 활용한 방식으로 해결할 수 있을 듯)
+            blockUserIdList.add(0L);
+        }
+
         PageRequest pageRequest = PageRequest.of(0, size);
         Page<Posts> entityPage = postsRepository.findByPostIdLessThanOrderByPostIdDesc(boardId, lastPostId, blockUserIdList, pageRequest);
         List<Posts> entityList = entityPage.getContent();
@@ -87,6 +91,10 @@ public class PostsService {
 
     public List<PostsResponseDto> searchPosts(String searchTerm, Long boardIdToSearch, Long userId) {
         List<Long> blockUserIdList = blockUserLogsRepository.getAllBlockUserIdByUser(userId);   // user가 차단한 유저들 id 목록을 불러옴
+
+        if (blockUserIdList.isEmpty()) {    // TODO : SQL의 NOT IN에 빈 리스트가 들어가면 값 반환이 안돼 0을 추가해줌. (임시 해결책이라 추후 NOT IN 대신 LEFT JOIN을 활용한 방식으로 해결할 수 있을 듯)
+            blockUserIdList.add(0L);
+        }
 
         // 공백, 쉼표, 하이픈을 기준으로 split
         String[] searchTermList = searchTerm.split("\\s|,|-");
@@ -134,6 +142,10 @@ public class PostsService {
 
     public MainPagePostsResponseDto getPostFromEachBoard(Long userId) {
         List<Long> blockUserIdList = blockUserLogsRepository.getAllBlockUserIdByUser(userId);   // user가 차단한 유저들 id 목록을 불러옴
+
+        if (blockUserIdList.isEmpty()) {    // TODO : SQL의 NOT IN에 빈 리스트가 들어가면 값 반환이 안돼 0을 추가해줌. (임시 해결책이라 추후 NOT IN 대신 LEFT JOIN을 활용한 방식으로 해결할 수 있을 듯)
+            blockUserIdList.add(0L);
+        }
 
         List<Posts> qnaPostEntityList = postsRepository.findByBoard(2L, blockUserIdList, PageRequest.of(0, 4));
         List<Posts> freePostEntityList = postsRepository.findByBoard(1L, blockUserIdList, PageRequest.of(0, 4));
