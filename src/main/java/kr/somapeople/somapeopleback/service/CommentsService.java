@@ -50,6 +50,10 @@ public class CommentsService {
     public List<CommentsResponseDto> findAllCommentsOnPost(Long postId, Long userId) {
         List<Long> blockUserIdList = blockUserLogsRepository.getAllBlockUserIdByUser(userId);
 
+        if (blockUserIdList.isEmpty()) {    // TODO : SQL의 NOT IN에 빈 리스트가 들어가면 값 반환이 안돼 0을 추가해줌. (임시 해결책이라 추후 NOT IN 대신 LEFT JOIN을 활용한 방식으로 해결할 수 있을 듯)
+            blockUserIdList.add(0L);
+        }
+
         List<Comments> entityList = commentsRepository.findAllCommentsOnPost(postId, blockUserIdList);
 
         return entityList.stream()
