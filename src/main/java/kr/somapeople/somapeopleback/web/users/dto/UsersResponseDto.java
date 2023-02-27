@@ -14,6 +14,8 @@ public class UsersResponseDto {
     private String userType;
     private Integer cardinalNum;
     private Boolean isCertified;
+    private int numOfPostsWritten;
+    private int numOfCommentsWritten;
     private Boolean isDelete;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -24,6 +26,8 @@ public class UsersResponseDto {
         this.userType = entity.getUserType();
         this.cardinalNum = entity.getCardinalNum();
         this.isCertified = entity.getIsCertified();
+        this.numOfPostsWritten = entity.getPostsList().size();
+        this.numOfCommentsWritten = entity.getCommentsList().size();
         this.isDelete = entity.getIsDelete();
         this.createdAt = entity.getCreatedAt();
         this.updatedAt = entity.getUpdatedAt();
