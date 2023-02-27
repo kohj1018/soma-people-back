@@ -3,6 +3,8 @@ package kr.somapeople.somapeopleback.service;
 import kr.somapeople.somapeopleback.domain.blockUserLogs.BlockUserLogsRepository;
 import kr.somapeople.somapeopleback.domain.boards.Boards;
 import kr.somapeople.somapeopleback.domain.boards.BoardsRepository;
+import kr.somapeople.somapeopleback.domain.comments.Comments;
+import kr.somapeople.somapeopleback.domain.comments.CommentsRepository;
 import kr.somapeople.somapeopleback.domain.posts.Posts;
 import kr.somapeople.somapeopleback.domain.posts.PostsRepository;
 import kr.somapeople.somapeopleback.domain.users.Users;
@@ -30,6 +32,7 @@ public class PostsService {
     private final BoardsRepository boardsRepository;
     private final UsersRepository usersRepository;
     private final BlockUserLogsRepository blockUserLogsRepository;
+    private final CommentsRepository commentsRepository;
 
     @Transactional
     public Long save(PostsSaveRequestDto requestDto) {
@@ -49,6 +52,13 @@ public class PostsService {
 
         Boards board = boardsRepository.findById(requestDto.getBoardId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시판이 존재하지 않습니다. id=" + requestDto.getBoardId()));
+
+        if (requestDto.getIsDelete()) { // 게시글 삭제 시 댓글도 모두 삭제
+            List<Comments> commentsList = commentsRepository.findAllCommentsOnPostForDelete(postId);
+            commentsList.forEach(comments -> {
+                comments.update(comments.getContent(), comments.getIsAnonymous(), true);
+            });
+        }
 
         post.update(board, requestDto.getTitle(), requestDto.getContent(), requestDto.getIsAnonymous(), requestDto.getIsDelete());
 
