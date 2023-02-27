@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
@@ -30,7 +31,7 @@ public class PostsResponseDto {
         this.content = entity.getContent();
         this.isAnonymous = entity.getIsAnonymous();
         this.hits = entity.getHits();
-        this.commentsNum = entity.getCommentsList().size();
+        this.commentsNum = (int) entity.getCommentsList().stream().filter(comments -> !comments.getIsDelete()).count();
         this.createdAt = entity.getCreatedAt();
         this.updatedAt = entity.getUpdatedAt();
     }
