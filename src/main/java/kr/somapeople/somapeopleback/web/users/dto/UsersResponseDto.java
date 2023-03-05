@@ -26,8 +26,8 @@ public class UsersResponseDto {
         this.userType = entity.getUserType();
         this.cardinalNum = entity.getCardinalNum();
         this.isCertified = entity.getIsCertified();
-        this.numOfPostsWritten = entity.getPostsList().size();
-        this.numOfCommentsWritten = entity.getCommentsList().size();
+        this.numOfPostsWritten = (int) entity.getPostsList().stream().filter(posts -> !posts.getIsDelete()).count();
+        this.numOfCommentsWritten = (int) entity.getCommentsList().stream().filter(comments -> !comments.getIsDelete()).count();
         this.isDelete = entity.getIsDelete();
         this.createdAt = entity.getCreatedAt();
         this.updatedAt = entity.getUpdatedAt();
