@@ -48,7 +48,7 @@ class UsersApiControllerTest {
         String name = "고병욱";
         String userType = "수료생";
         Integer cardinalNum = 13;
-        Boolean isCertified = true;
+        String email = "kohj1018@hanyang.ac.kr";
         String oauthId = "djakslfjdslkacdsfadsfdsadsfac";
         String refreshToken = "cdjalskjfckdlsajvkadsklcjdklasjkj";
         Boolean agreeTerms = true;
@@ -56,7 +56,7 @@ class UsersApiControllerTest {
                 .name(name)
                 .userType(userType)
                 .cardinalNum(cardinalNum)
-                .isCertified(isCertified)
+                .email(email)
                 .oauthId(oauthId)
                 .refreshToken(refreshToken)
                 .agreeTerms(agreeTerms)
@@ -75,7 +75,7 @@ class UsersApiControllerTest {
         assertThat(all.get(0).getName()).isEqualTo(name);
         assertThat(all.get(0).getUserType()).isEqualTo(userType);
         assertThat(all.get(0).getCardinalNum()).isEqualTo(cardinalNum);
-        assertThat(all.get(0).getIsCertified()).isEqualTo(isCertified);
+        assertThat(all.get(0).getEmail()).isEqualTo(email);
         assertThat(all.get(0).getOauthId()).isEqualTo(oauthId);
         assertThat(all.get(0).getRefreshToken()).isEqualTo(refreshToken);
         assertThat(all.get(0).getAgreeTerms()).isEqualTo(agreeTerms);
@@ -89,7 +89,7 @@ class UsersApiControllerTest {
                 .name("고병욱")
                 .userType("수료생")
                 .cardinalNum(13)
-                .isCertified(true)
+                .email("kohj1018@hanyang.ac.kr")
                 .oauthId("djakslfjdslkacdsfadsfdsadsfac")
                 .refreshToken("cdjalskjfckdlsajvkadsklcjdklasjkj")
                 .agreeTerms(true)

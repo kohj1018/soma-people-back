@@ -60,7 +60,7 @@ class CommentsApiControllerTest {
             .name("고병욱")
             .userType("수료생")
             .cardinalNum(13)
-            .isCertified(true)
+            .email("kohj1018@hanyang.ac.kr")
             .oauthId("djakslfjdslkacdsfadsfdsadsfac")
             .refreshToken("cdjalskjfckdlsajvkadsklcjdklasjkj")
             .agreeTerms(true)

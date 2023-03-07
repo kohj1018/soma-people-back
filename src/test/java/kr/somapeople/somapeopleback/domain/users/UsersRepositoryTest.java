@@ -31,7 +31,7 @@ public class UsersRepositoryTest {
         String name = "고병욱";
         String userType = "수료생";
         Integer cardinalNum = 13;
-        Boolean isCertified = true;
+        String email = "kohj1018@hanyang.ac.kr";
         String oauthId = "djakslfjdslkacdsfadsfdsadsfac";
         String refreshToken = "cdjalskjfckdlsajvkadsklcjdklasjkj";
         Boolean agreeTerms = true;
@@ -40,7 +40,7 @@ public class UsersRepositoryTest {
                 .name(name)
                 .userType(userType)
                 .cardinalNum(cardinalNum)
-                .isCertified(isCertified)
+                .email(email)
                 .oauthId(oauthId)
                 .refreshToken(refreshToken)
                 .agreeTerms(agreeTerms)
@@ -54,7 +54,7 @@ public class UsersRepositoryTest {
         assertThat(user.getName()).isEqualTo(name);
         assertThat(user.getUserType()).isEqualTo(userType);
         assertThat(user.getCardinalNum()).isEqualTo(cardinalNum);
-        assertThat(user.getIsCertified()).isEqualTo(isCertified);
+        assertThat(user.getEmail()).isEqualTo(email);
         assertThat(user.getOauthId()).isEqualTo(oauthId);
         assertThat(user.getRefreshToken()).isEqualTo(refreshToken);
         assertThat(user.getAgreeTerms()).isEqualTo(agreeTerms);

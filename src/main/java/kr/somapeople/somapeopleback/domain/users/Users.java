@@ -35,6 +35,9 @@ public class Users extends BaseTimeEntity {
     @Column(name = "is_certified", nullable = false)
     private Boolean isCertified;
 
+    @Column(length = 100, nullable = false)
+    private String email;
+
     @Column(name = "oauth_id", nullable = false)
     private String oauthId;
 
@@ -57,11 +60,12 @@ public class Users extends BaseTimeEntity {
     private List<BlockUserLogs> blockUserLogsList = new ArrayList<>();
 
     @Builder
-    public Users(String name, String userType, int cardinalNum, Boolean isCertified, String oauthId, String refreshToken, Boolean agreeTerms) {
+    public Users(String name, String userType, int cardinalNum, String email, String oauthId, String refreshToken, Boolean agreeTerms) {
         this.name = name;
         this.userType = userType;
         this.cardinalNum = cardinalNum;
-        this.isCertified = isCertified;
+        this.isCertified = false;
+        this.email = email;
         this.oauthId = oauthId;
         this.refreshToken = refreshToken;
         this.agreeTerms = agreeTerms;
