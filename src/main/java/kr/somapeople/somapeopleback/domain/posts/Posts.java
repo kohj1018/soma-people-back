@@ -71,6 +71,7 @@ public class Posts extends BaseTimeEntity {
     public void addHits(Long postAuthorId, Long userId) {
         if (!postAuthorId.equals(userId)) { // 글 작성자가 조회하는 경우는 조회수 증가 안함
             this.hits += 1;
+            this.setCreatedAt(this.getCreatedAt()); //TODO: 추후 개선방법 있는지 확인
         }
     }
 }
