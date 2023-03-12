@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface CommentsRepository extends JpaRepository<Comments, Long> {
 
-    @Query(value = "SELECT c FROM Comments c WHERE c.post.postId = ?1 AND c.isDelete = false AND c.user.userId NOT IN ?2 ORDER BY c.commentId DESC")
+    @Query(value = "SELECT c FROM Comments c WHERE c.post.postId = ?1 AND c.isDelete = false AND c.user.userId NOT IN ?2 ORDER BY c.commentId")
     List<Comments> findAllCommentsOnPost(Long postId, List<Long> blockUserIdList);
 
     @Query(value = "SELECT c FROM Comments c WHERE c.post.postId = ?1 AND c.isDelete = false")
