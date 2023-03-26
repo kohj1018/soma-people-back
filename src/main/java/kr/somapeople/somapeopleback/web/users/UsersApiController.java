@@ -3,6 +3,7 @@ package kr.somapeople.somapeopleback.web.users;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.somapeople.somapeopleback.service.UsersService;
+import kr.somapeople.somapeopleback.web.users.dto.FirebaseTokenUpdateRequestDto;
 import kr.somapeople.somapeopleback.web.users.dto.UsersResponseDto;
 import kr.somapeople.somapeopleback.web.users.dto.UsersSaveRequestDto;
 import kr.somapeople.somapeopleback.web.users.dto.UsersUpdateRequestDto;
@@ -43,7 +44,7 @@ public class UsersApiController {
 
     @Operation(summary = "firebaseToken 등록/수정")
     @PutMapping("/firebaseToken/{userId}")
-    public void registerFirebaseToken(@PathVariable Long userId, @RequestBody String firebaseToken) {
-        usersService.registerFirebaseToken(userId, firebaseToken);
+    public void registerFirebaseToken(@PathVariable Long userId, @RequestBody FirebaseTokenUpdateRequestDto requestDto) {
+        usersService.registerFirebaseToken(userId, requestDto.getFirebaseToken());
     }
 }
