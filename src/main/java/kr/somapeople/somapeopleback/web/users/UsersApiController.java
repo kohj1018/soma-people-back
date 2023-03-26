@@ -40,4 +40,10 @@ public class UsersApiController {
     public Long findUserIdByOauthId(@PathVariable String oauthId) {
         return usersService.findUserIdByOauthId(oauthId);
     }
+
+    @Operation(summary = "firebaseToken 등록/수정")
+    @PutMapping("/firebaseToken/{userId}")
+    public void registerFirebaseToken(@PathVariable Long userId, @RequestBody String firebaseToken) {
+        usersService.registerFirebaseToken(userId, firebaseToken);
+    }
 }

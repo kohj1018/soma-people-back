@@ -47,6 +47,9 @@ public class Users extends BaseTimeEntity {
     @Column(name = "agree_terms", nullable = false)
     private Boolean agreeTerms;
 
+    @Column(name = "firebase_token", nullable = true)
+    private String firebaseToken;
+
     @Column(name = "is_delete", nullable = false)
     private Boolean isDelete;
 
@@ -69,11 +72,16 @@ public class Users extends BaseTimeEntity {
         this.oauthId = oauthId;
         this.refreshToken = refreshToken;
         this.agreeTerms = agreeTerms;
+        this.firebaseToken = null;
         this.isDelete = false;
     }
 
     public void update(String name, Boolean isDelete) {
         this.name = name;
         this.isDelete = isDelete;
+    }
+
+    public void registerFirebaseToken(String firebaseToken) {
+        this.firebaseToken = firebaseToken;
     }
 }
