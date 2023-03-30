@@ -11,15 +11,16 @@ import org.springframework.core.io.ClassPathResource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @Configuration
 public class FCMConfig {
     @Bean
     FirebaseMessaging firebaseMessaging() throws IOException {
-        ClassPathResource file = new ClassPathResource("firebase/soma-people-firebase-adminsdk-kg5ok-92f2cce3bb.json");
+        ClassPathResource resource = new ClassPathResource("firebase/soma-people-firebase-adminsdk-kg5ok-92f2cce3bb.json");
 
-        FileInputStream refreshToken = new FileInputStream(file.getFile());
+        InputStream refreshToken = resource.getInputStream();
 
         FirebaseApp firebaseApp = null;
         List<FirebaseApp> firebaseAppList = FirebaseApp.getApps();
