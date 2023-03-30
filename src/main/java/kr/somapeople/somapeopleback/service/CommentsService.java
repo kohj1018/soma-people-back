@@ -41,24 +41,19 @@ public class CommentsService {
         Long commentId = commentsRepository.save(requestDto.toEntity(post, user)).getCommentId();   // 댓글 저장
 
         // 댓글 작성자가 글쓴이가 아닌 경우 해당 글쓴이에게 notification을 보냄
-//        if (!Objects.equals(post.getUser().getUserId(), user.getUserId())) {
-//            Optional<Users> targetUser = usersRepository.findById(post.getUser().getUserId());
-//
-//            targetUser.ifPresent(
-//                    targetUserInfo -> fcmNotificationService.sendNotificationByToken(
-//                            FCMNotificationRequestDto.builder()
-//                                    .targetUserId(targetUserInfo.getUserId())
-//                                    .title("댓글 알림")
-//                                    .body(requestDto.getContent())
-//                                    .data(
-//                                        "additionalProp1": "string",
-//                                        "additionalProp2": "string",
-//                                        "additionalProp3": "string"
-//                                    )
-//                                    .build()
-//                    )
-//            );
-//        }
+        if (!Objects.equals(post.getUser().getUserId(), user.getUserId())) {
+            Optional<Users> targetUser = usersRepository.findById(post.getUser().getUserId());
+
+            targetUser.ifPresent(
+                    targetUserInfo -> fcmNotificationService.sendNotificationByToken(
+                            FCMNotificationRequestDto.builder()
+                                    .targetUserId(targetUserInfo.getUserId())
+                                    .title("댓글 알림")
+                                    .body(requestDto.getContent())
+                                    .build()
+                    )
+            );
+        }
 
         return commentId;
     }

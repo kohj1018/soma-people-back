@@ -34,7 +34,7 @@ public class FCMNotificationService {
                 Message message = Message.builder()
                         .setToken(user.get().getFirebaseToken())
                         .setNotification(notification)
-                        .putAllData(requestDto.getData())
+                        // .putAllData(requestDto.getData())
                         .build();
 
                 try {
