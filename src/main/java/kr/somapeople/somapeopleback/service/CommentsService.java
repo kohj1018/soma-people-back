@@ -10,11 +10,14 @@ import kr.somapeople.somapeopleback.domain.users.UsersRepository;
 import kr.somapeople.somapeopleback.web.comments.dto.CommentsResponseDto;
 import kr.somapeople.somapeopleback.web.comments.dto.CommentsSaveRequestDto;
 import kr.somapeople.somapeopleback.web.comments.dto.CommentsUpdateRequestDto;
+import kr.somapeople.somapeopleback.web.fcmNotification.dto.FCMNotificationRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -25,6 +28,7 @@ public class CommentsService {
     private final PostsRepository postsRepository;
     private final UsersRepository usersRepository;
     private final BlockUserLogsRepository blockUserLogsRepository;
+    private final FCMNotificationService fcmNotificationService;
 
     @Transactional
     public Long save(CommentsSaveRequestDto requestDto) {
@@ -34,7 +38,24 @@ public class CommentsService {
         Users user = usersRepository.findById(requestDto.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다. userId=" + requestDto.getUserId()));
 
-        return commentsRepository.save(requestDto.toEntity(post, user)).getCommentId();
+        Long commentId = commentsRepository.save(requestDto.toEntity(post, user)).getCommentId();   // 댓글 저장
+
+        // 댓글 작성자가 글쓴이가 아닌 경우 해당 글쓴이에게 notification을 보냄
+        if (!Objects.equals(post.getUser().getUserId(), user.getUserId())) {
+            Optional<Users> targetUser = usersRepository.findById(post.getUser().getUserId());
+
+            targetUser.ifPresent(
+                    targetUserInfo -> fcmNotificationService.sendNotificationByToken(
+                            FCMNotificationRequestDto.builder()
+                                    .targetUserId(targetUserInfo.getUserId())
+                                    .title("댓글 알림")
+                                    .body(requestDto.getContent())
+                                    .build()
+                    )
+            );
+        }
+
+        return commentId;
     }
 
     @Transactional
