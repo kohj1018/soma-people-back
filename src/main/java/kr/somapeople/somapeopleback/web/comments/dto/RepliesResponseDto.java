@@ -6,28 +6,25 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class CommentsResponseDto {
+public class RepliesResponseDto {
     private Long commentId;
-    private Long postId;
+    private Long refId;
     private UsersResponseDto user;
     private String content;
     private Boolean isAnonymous;
-    private List<RepliesResponseDto> replyList;
     private Boolean isDelete;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public CommentsResponseDto(Comments entity, List<RepliesResponseDto> replyList) {
+    public RepliesResponseDto(Comments entity) {
         this.commentId = entity.getCommentId();
-        this.postId = entity.getPost().getPostId();
+        this.refId = entity.getRefId();
         this.user = new UsersResponseDto(entity.getUser());
         this.content = entity.getContent();
         this.isAnonymous = entity.getIsAnonymous();
-        this.replyList = replyList;
         this.isDelete = entity.getIsDelete();
         this.createdAt = entity.getCreatedAt();
         this.updatedAt = entity.getUpdatedAt();

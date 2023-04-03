@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Getter
 @NoArgsConstructor
@@ -28,6 +29,9 @@ public class Comments extends BaseTimeEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private Users user;
 
+    @Column(name = "ref_id", nullable = false)
+    private Long refId;
+
     @Column(length = 1000, nullable = false)
     private String content;
 
@@ -38,9 +42,10 @@ public class Comments extends BaseTimeEntity {
     private Boolean isDelete;
 
     @Builder
-    public Comments(Posts post, Users user, String content, Boolean isAnonymous) {
+    public Comments(Posts post, Users user, Long refId, String content, Boolean isAnonymous) {
         this.post = post;
         this.user = user;
+        this.refId = Objects.requireNonNullElse(refId, 0L);
         this.content = content;
         this.isAnonymous = isAnonymous;
         this.isDelete = false;

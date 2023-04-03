@@ -7,18 +7,22 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 @Getter
 @NoArgsConstructor
 public class CommentsSaveRequestDto {
     private Long postId;
     private Long userId;
+    private Long refId;
     private String content;
     private Boolean isAnonymous;
 
     @Builder
-    public CommentsSaveRequestDto(Long postId, Long userId, String content, Boolean isAnonymous) {
+    public CommentsSaveRequestDto(Long postId, Long userId, Long refId, String content, Boolean isAnonymous) {
         this.postId = postId;
         this.userId = userId;
+        this.refId = Objects.requireNonNullElse(refId, 0L);
         this.content = content;
         this.isAnonymous = isAnonymous;
     }
@@ -27,6 +31,7 @@ public class CommentsSaveRequestDto {
         return Comments.builder()
                 .post(post)
                 .user(user)
+                .refId(refId)
                 .content(content)
                 .isAnonymous(isAnonymous)
                 .build();

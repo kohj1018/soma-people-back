@@ -10,11 +10,13 @@ import kr.somapeople.somapeopleback.domain.users.UsersRepository;
 import kr.somapeople.somapeopleback.web.comments.dto.CommentsResponseDto;
 import kr.somapeople.somapeopleback.web.comments.dto.CommentsSaveRequestDto;
 import kr.somapeople.somapeopleback.web.comments.dto.CommentsUpdateRequestDto;
+import kr.somapeople.somapeopleback.web.comments.dto.RepliesResponseDto;
 import kr.somapeople.somapeopleback.web.fcmNotification.dto.FCMNotificationRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -41,19 +43,39 @@ public class CommentsService {
         Long commentId = commentsRepository.save(requestDto.toEntity(post, user)).getCommentId();   // 댓글 저장
 
         // 댓글 작성자가 글쓴이가 아닌 경우 해당 글쓴이에게 notification을 보냄
-        if (!Objects.equals(post.getUser().getUserId(), user.getUserId())) {
-            Optional<Users> targetUser = usersRepository.findById(post.getUser().getUserId());
+        if (requestDto.getRefId() == 0) {   // 게시글에 단 댓글인 경우
+            if (!Objects.equals(post.getUser().getUserId(), user.getUserId())) {
+                Optional<Users> targetUser = usersRepository.findById(post.getUser().getUserId());
 
-            targetUser.ifPresent(
+                targetUser.ifPresent(
                     targetUserInfo -> fcmNotificationService.sendNotificationByToken(
-                            FCMNotificationRequestDto.builder()
-                                    .targetUserId(targetUserInfo.getUserId())
-                                    .title("댓글 알림")
-                                    .body(requestDto.getContent())
-                                    .build()
+                        FCMNotificationRequestDto.builder()
+                                .targetUserId(targetUserInfo.getUserId())
+                                .title("댓글 알림")
+                                .body(requestDto.getContent())
+                                .build()
                     )
-            );
+                );
+            }
+        } else {    // 대댓글인 경우
+            Comments comment = commentsRepository.findById(requestDto.getRefId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다. commentId=" + requestDto.getRefId()));
+
+            if (!Objects.equals(comment.getUser().getUserId(), user.getUserId())) {
+                Optional<Users> targetUser = usersRepository.findById(comment.getUser().getUserId());
+
+                targetUser.ifPresent(
+                    targetUserInfo -> fcmNotificationService.sendNotificationByToken(
+                        FCMNotificationRequestDto.builder()
+                            .targetUserId(targetUserInfo.getUserId())
+                            .title("대댓글 알림")
+                            .body(requestDto.getContent())
+                            .build()
+                    )
+                );
+            }
         }
+
 
         return commentId;
     }
@@ -75,18 +97,25 @@ public class CommentsService {
             blockUserIdList.add(0L);
         }
 
-        List<Comments> entityList = commentsRepository.findAllCommentsOnPost(postId, blockUserIdList);
+        List<Comments> commentsList = commentsRepository.findAllCommentsOnPost(postId, blockUserIdList);
 
-        return entityList.stream()
-                .map(CommentsResponseDto::new)
+        return commentsList.stream()
+                .filter(comment -> comment.getRefId() == 0)
+                .map(comment -> {
+                    List<RepliesResponseDto> repliesResponseDtoList = commentsList.stream()
+                        .filter(_comment -> Objects.equals(_comment.getRefId(), comment.getCommentId()))
+                        .map(RepliesResponseDto::new)
+                        .collect(Collectors.toList());
+                    return new CommentsResponseDto(comment, repliesResponseDtoList);
+                })
                 .collect(Collectors.toList());
     }
 
     public List<CommentsResponseDto> findByUserId(Long userId) {
-        List<Comments> entityList = commentsRepository.findByUserId(userId);
+        List<Comments> commentsList = commentsRepository.findByUserId(userId);
 
-        return entityList.stream()
-                .map(CommentsResponseDto::new)
+        return commentsList.stream()
+                .map(comment -> new CommentsResponseDto(comment, new ArrayList<>()))
                 .collect(Collectors.toList());
     }
 }
