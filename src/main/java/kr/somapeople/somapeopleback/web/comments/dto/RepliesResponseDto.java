@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class RepliesResponseDto {
     private Long commentId;
+    private Long postId;
     private Long refId;
     private UsersResponseDto user;
     private String content;
@@ -21,6 +22,7 @@ public class RepliesResponseDto {
 
     public RepliesResponseDto(Comments entity) {
         this.commentId = entity.getCommentId();
+        this.postId = entity.getPost().getPostId();
         this.refId = entity.getRefId();
         this.user = new UsersResponseDto(entity.getUser());
         this.content = entity.getContent();
