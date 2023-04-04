@@ -24,7 +24,7 @@ public class FCMNotificationService {
         Optional<Users> user = usersRepository.findById(requestDto.getTargetUserId());
 
         if (user.isPresent()) {
-            if (user.get().getFirebaseToken() != null) {
+            if (user.get().getFirebaseToken() != null && user.get().getFirebaseToken().length() > 5) {
                 Notification notification = Notification.builder()
                         .setTitle(requestDto.getTitle())
                         .setBody(requestDto.getBody())
