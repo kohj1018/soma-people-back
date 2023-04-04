@@ -19,9 +19,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -150,6 +149,7 @@ public class PostsService {
                 .collect(Collectors.toList());
     }
 
+    // TODO: 앱 업데이트 되면 qnaPostEntity 지워야 함.
     public MainPagePostsResponseDto getPostFromEachBoard(Long userId) {
         List<Long> blockUserIdList = blockUserLogsRepository.getAllBlockUserIdByUser(userId);   // user가 차단한 유저들 id 목록을 불러옴
 
@@ -157,11 +157,57 @@ public class PostsService {
             blockUserIdList.add(0L);
         }
 
+        List<Long> boardIdList = new ArrayList<>();
+        boardIdList.add(1L);
+        boardIdList.add(2L);
+        boardIdList.add(3L);
+        boardIdList.add(4L);
+        boardIdList.add(1000L);
+
+        Optional<Users> user = usersRepository.findById(userId);
+        user.ifPresent(userInfo -> {
+            if (userInfo.getIsCertified()) {
+                if (Objects.equals(userInfo.getUserType(), "연수생")) {    // 본인 기수 게시판은 볼 수 있도록 추가
+                    boardIdList.add(Long.parseLong("1" + userInfo.getCardinalNum().toString()));
+                    if (Objects.equals(userInfo.getCardinalNum(), LocalDateTime.now().getYear() - 9)) { // 올해 연수생들은 게시판 추가
+                        boardIdList.add(10L);
+                        boardIdList.add(11L);
+                        boardIdList.add(99L);
+                    }
+                } else if (Objects.equals(userInfo.getUserType(), "멘토")) {
+                    boardIdList.add(100L);
+                } else if (Objects.equals(userInfo.getUserType(), "사무국") || Objects.equals(userInfo.getUserType(), "관리자")) {
+                    boardIdList.add(10L);
+                    boardIdList.add(11L);
+                    boardIdList.add(99L);
+                    boardIdList.add(100L);
+                    boardIdList.add(101L);
+                    boardIdList.add(102L);
+                    boardIdList.add(103L);
+                    boardIdList.add(104L);
+                    boardIdList.add(105L);
+                    boardIdList.add(106L);
+                    boardIdList.add(107L);
+                    boardIdList.add(108L);
+                    boardIdList.add(109L);
+                    boardIdList.add(110L);
+                    boardIdList.add(111L);
+                    boardIdList.add(112L);
+                    boardIdList.add(113L);
+                    boardIdList.add(114L);
+                }
+            }
+        });
+
+        List<Posts> recentPostEntityList = postsRepository.findResentPosts(boardIdList, blockUserIdList, PageRequest.of(0, 4));
         List<Posts> qnaPostEntityList = postsRepository.findByBoard(2L, blockUserIdList, PageRequest.of(0, 4));
         List<Posts> freePostEntityList = postsRepository.findByBoard(1L, blockUserIdList, PageRequest.of(0, 4));
         List<Posts> applicantPostEntityList = postsRepository.findByBoard(4L, blockUserIdList, PageRequest.of(0, 4));
 
         return new MainPagePostsResponseDto(
+                recentPostEntityList.stream()
+                        .map(PostsResponseDto::new)
+                            .collect(Collectors.toList()),
                 qnaPostEntityList.stream()
                         .map(PostsResponseDto::new)
                         .collect(Collectors.toList()),
