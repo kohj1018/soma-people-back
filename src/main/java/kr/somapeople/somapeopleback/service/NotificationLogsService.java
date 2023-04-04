@@ -4,6 +4,8 @@ import kr.somapeople.somapeopleback.domain.notificationLogs.NotificationLogs;
 import kr.somapeople.somapeopleback.domain.notificationLogs.NotificationLogsRepository;
 import kr.somapeople.somapeopleback.web.notificationLogs.dto.NotificationLogsResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,10 +47,12 @@ public class NotificationLogsService {
         return notificationLogId;
     }
 
-    public List<NotificationLogsResponseDto> findByTargetUserId(Long targetUserId) {
-        List<NotificationLogs> notificationLogsList = notificationLogsRepository.findByTargetUserId(targetUserId);
+    public List<NotificationLogsResponseDto> fetchNotificationPagesByTargetUserId(Long targetUserId, Long lastNotificationLogId, int size) {
+        PageRequest pageRequest = PageRequest.of(0, size);
+        Page<NotificationLogs> entityPage = notificationLogsRepository.findByTargetUserIdLessThanOrderByNotificationLogIdDesc(targetUserId, lastNotificationLogId, pageRequest);
+        List<NotificationLogs> entityList = entityPage.getContent();
 
-        return notificationLogsList.stream()
+        return entityList.stream()
                 .map(NotificationLogsResponseDto::new)
                 .collect(Collectors.toList());
     }

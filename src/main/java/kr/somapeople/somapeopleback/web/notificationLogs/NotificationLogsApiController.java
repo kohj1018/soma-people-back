@@ -29,9 +29,9 @@ public class NotificationLogsApiController {
         return notificationLogsService.deleteNotificationLog(notificationLogId);
     }
 
-    @Operation(summary = "유저가 받은 알림 기록 모두 불러오기")
-    @GetMapping("/getAllNotificationLog/{userId}")
-    public List<NotificationLogsResponseDto> findByTargetUserId(@PathVariable Long userId) {
-        return notificationLogsService.findByTargetUserId(userId);
+    @Operation(summary = "유저가 받은 알림 기록 무한 스크롤 불러오기")
+    @GetMapping()
+    public List<NotificationLogsResponseDto> getNotificationLogsLowerThanId(@RequestParam Long userId, @RequestParam Long lastNotificationLogId, @RequestParam int size) {
+        return notificationLogsService.fetchNotificationPagesByTargetUserId(userId, lastNotificationLogId, size);
     }
 }
