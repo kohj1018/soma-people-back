@@ -3,6 +3,7 @@ package kr.somapeople.somapeopleback.service;
 import kr.somapeople.somapeopleback.domain.blockUserLogs.BlockUserLogsRepository;
 import kr.somapeople.somapeopleback.domain.comments.Comments;
 import kr.somapeople.somapeopleback.domain.comments.CommentsRepository;
+import kr.somapeople.somapeopleback.domain.notificationLogs.NotificationLogsRepository;
 import kr.somapeople.somapeopleback.domain.posts.Posts;
 import kr.somapeople.somapeopleback.domain.posts.PostsRepository;
 import kr.somapeople.somapeopleback.domain.users.Users;
@@ -12,6 +13,7 @@ import kr.somapeople.somapeopleback.web.comments.dto.CommentsSaveRequestDto;
 import kr.somapeople.somapeopleback.web.comments.dto.CommentsUpdateRequestDto;
 import kr.somapeople.somapeopleback.web.comments.dto.RepliesResponseDto;
 import kr.somapeople.somapeopleback.web.fcmNotification.dto.FCMNotificationRequestDto;
+import kr.somapeople.somapeopleback.web.notificationLogs.dto.NotificationLogsSaveRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +33,7 @@ public class CommentsService {
     private final UsersRepository usersRepository;
     private final BlockUserLogsRepository blockUserLogsRepository;
     private final FCMNotificationService fcmNotificationService;
+    private final NotificationLogsRepository notificationLogsRepository;
 
     @Transactional
     public Long save(CommentsSaveRequestDto requestDto) {
@@ -48,30 +51,54 @@ public class CommentsService {
                 Optional<Users> targetUser = usersRepository.findById(post.getUser().getUserId());
 
                 targetUser.ifPresent(
-                    targetUserInfo -> fcmNotificationService.sendNotificationByToken(
-                        FCMNotificationRequestDto.builder()
+                    targetUserInfo -> {
+                        fcmNotificationService.sendNotificationByToken(
+                            FCMNotificationRequestDto.builder()
                                 .targetUserId(targetUserInfo.getUserId())
                                 .title("댓글 알림")
                                 .body(requestDto.getContent())
                                 .build()
-                    )
+                        );
+
+                        notificationLogsRepository.save(NotificationLogsSaveRequestDto.builder()
+                            .sendingUserId(user.getUserId())
+                            .targetUserId(targetUserInfo.getUserId())
+                            .postId(post.getPostId())
+                            .boardName(post.getBoard().getName())
+                            .notificationType("댓글")
+                            .content(requestDto.getContent())
+                            .build()
+                            .toEntity());
+                    }
                 );
             }
         } else {    // 대댓글인 경우
-            Comments comment = commentsRepository.findById(requestDto.getRefId())
+            Comments refComment = commentsRepository.findById(requestDto.getRefId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다. commentId=" + requestDto.getRefId()));
 
-            if (!Objects.equals(comment.getUser().getUserId(), user.getUserId())) {
-                Optional<Users> targetUser = usersRepository.findById(comment.getUser().getUserId());
+            if (!Objects.equals(refComment.getUser().getUserId(), user.getUserId())) {
+                Optional<Users> targetUser = usersRepository.findById(refComment.getUser().getUserId());
 
                 targetUser.ifPresent(
-                    targetUserInfo -> fcmNotificationService.sendNotificationByToken(
-                        FCMNotificationRequestDto.builder()
+                    targetUserInfo -> {
+                        fcmNotificationService.sendNotificationByToken(
+                            FCMNotificationRequestDto.builder()
+                                .targetUserId(targetUserInfo.getUserId())
+                                .title("대댓글 알림")
+                                .body(requestDto.getContent())
+                                .build()
+                        );
+
+                        notificationLogsRepository.save(NotificationLogsSaveRequestDto.builder()
+                            .sendingUserId(user.getUserId())
                             .targetUserId(targetUserInfo.getUserId())
-                            .title("대댓글 알림")
-                            .body(requestDto.getContent())
+                            .postId(post.getPostId())
+                            .boardName(post.getBoard().getName())
+                            .notificationType("대댓글")
+                            .content(requestDto.getContent())
                             .build()
-                    )
+                            .toEntity());
+                    }
                 );
             }
         }
