@@ -3,6 +3,7 @@ package kr.somapeople.somapeopleback.web.notificationLogs;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.somapeople.somapeopleback.service.NotificationLogsService;
+import kr.somapeople.somapeopleback.web.notificationLogs.dto.AnnouncementNotificationLogSaveRequestDto;
 import kr.somapeople.somapeopleback.web.notificationLogs.dto.NotificationLogsResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,12 @@ import java.util.List;
 public class NotificationLogsApiController {
 
     private final NotificationLogsService notificationLogsService;
+
+    @Operation(summary = "모두에게 알림 기록 남기기")
+    @PostMapping("/leaveNotificationLogForAll")
+    public Long leaveNotificationLogForAll(@RequestBody AnnouncementNotificationLogSaveRequestDto requestDto) {
+        return notificationLogsService.leaveNotificationLogForAll(requestDto);
+    }
 
     @Operation(summary = "알림 기록 확인 완료")
     @PutMapping("/checkNotificationLog/{notificationLogId}")
