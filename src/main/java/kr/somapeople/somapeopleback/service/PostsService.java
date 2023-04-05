@@ -200,7 +200,6 @@ public class PostsService {
         });
 
         List<Posts> recentPostEntityList = postsRepository.findResentPosts(boardIdList, blockUserIdList, PageRequest.of(0, 4));
-        List<Posts> qnaPostEntityList = postsRepository.findByBoard(2L, blockUserIdList, PageRequest.of(0, 4));
         List<Posts> freePostEntityList = postsRepository.findByBoard(1L, blockUserIdList, PageRequest.of(0, 4));
         List<Posts> applicantPostEntityList = postsRepository.findByBoard(4L, blockUserIdList, PageRequest.of(0, 4));
 
@@ -208,9 +207,6 @@ public class PostsService {
                 recentPostEntityList.stream()
                         .map(PostsResponseDto::new)
                             .collect(Collectors.toList()),
-                qnaPostEntityList.stream()
-                        .map(PostsResponseDto::new)
-                        .collect(Collectors.toList()),
                 freePostEntityList.stream()
                         .map(PostsResponseDto::new)
                         .collect(Collectors.toList()),
