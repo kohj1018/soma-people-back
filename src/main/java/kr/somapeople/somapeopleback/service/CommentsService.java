@@ -112,6 +112,15 @@ public class CommentsService {
         Comments comment = commentsRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다. id=" + commentId));
 
+        // 대댓글이 달려있으면 삭제할 수 없도록 처리
+        if (requestDto.getIsDelete()) {
+            List<Comments> replyList = commentsRepository.findByRefId(commentId);
+
+            if (!replyList.isEmpty()) {
+                throw new IllegalArgumentException("해당 댓글에 대댓글이 달려있어 삭제할 수 없습니다. id=" + commentId);
+            }
+        }
+
         comment.update(requestDto.getContent(), requestDto.getIsAnonymous(), requestDto.getIsDelete());
 
         return commentId;

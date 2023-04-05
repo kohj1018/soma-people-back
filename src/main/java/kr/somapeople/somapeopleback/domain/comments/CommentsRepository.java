@@ -15,4 +15,7 @@ public interface CommentsRepository extends JpaRepository<Comments, Long> {
 
     @Query(value = "SELECT c FROM Comments c WHERE c.user.userId = ?1 AND c.isDelete = false ORDER BY c.commentId DESC")
     List<Comments> findByUserId(Long userId);
+
+    @Query(value = "SELECT c FROM Comments c WHERE c.refId = ?1 AND c.isDelete = false")
+    List<Comments> findByRefId(Long refId);
 }

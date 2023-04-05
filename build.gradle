@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'kr.somapeople'
-version = '0.2.1-SNAPSHOT' + new Date().format('yy-MM-dd')
+version = '1.0.0-SNAPSHOT' + new Date().format('yy-MM-dd')
 sourceCompatibility = '11'
 
 configurations {

@@ -149,7 +149,6 @@ public class PostsService {
                 .collect(Collectors.toList());
     }
 
-    // TODO: 앱 업데이트 되면 qnaPostEntity 지워야 함.
     public MainPagePostsResponseDto getPostFromEachBoard(Long userId) {
         List<Long> blockUserIdList = blockUserLogsRepository.getAllBlockUserIdByUser(userId);   // user가 차단한 유저들 id 목록을 불러옴
 
