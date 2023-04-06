@@ -76,31 +76,41 @@ public class CommentsService {
             Comments refComment = commentsRepository.findById(requestDto.getRefId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다. commentId=" + requestDto.getRefId()));
 
+            List<Long> targetUserIdList = new ArrayList<>();    // 대댓글 알림을 보낼 대상들
             if (!Objects.equals(refComment.getUser().getUserId(), user.getUserId())) {
-                Optional<Users> targetUser = usersRepository.findById(refComment.getUser().getUserId());
-
-                targetUser.ifPresent(
-                    targetUserInfo -> {
-                        fcmNotificationService.sendNotificationByToken(
-                            FCMNotificationRequestDto.builder()
-                                .targetUserId(targetUserInfo.getUserId())
-                                .title("대댓글 알림")
-                                .body(requestDto.getContent())
-                                .build()
-                        );
-
-                        notificationLogsRepository.save(NotificationLogsSaveRequestDto.builder()
-                            .sendingUserId(user.getUserId())
-                            .targetUserId(targetUserInfo.getUserId())
-                            .postId(post.getPostId())
-                            .boardName(post.getBoard().getName())
-                            .notificationType("대댓글")
-                            .content(requestDto.getContent())
-                            .build()
-                            .toEntity());
-                    }
-                );
+                targetUserIdList.add(refComment.getUser().getUserId());
             }
+            commentsRepository.findByRefId(refComment.getCommentId())  // 대댓글 단 댓글에 달려있던 대댓글들을 모두 조회
+                .forEach(commentInfo -> {
+                    if (!Objects.equals(commentInfo.getUser().getUserId(), user.getUserId())    // 대댓글 작성자가 본인과 다르고
+                        || !targetUserIdList.contains(commentInfo.getUser().getUserId())) {     // 리스트에 이미 넣은 값이 아니라면 추가 (중복방지)
+                        targetUserIdList.add(commentInfo.getUser().getUserId());
+                    }
+                });
+
+            targetUserIdList.forEach(targetUserId -> {  // 리스트에 있는 모두에게 알림 전송
+                Optional<Users> targetUser = usersRepository.findById(targetUserId);
+
+                if (targetUser.isPresent()) {
+                    fcmNotificationService.sendNotificationByToken(
+                        FCMNotificationRequestDto.builder()
+                            .targetUserId(targetUserId)
+                            .title("대댓글 알림")
+                            .body(requestDto.getContent())
+                            .build()
+                    );
+
+                    notificationLogsRepository.save(NotificationLogsSaveRequestDto.builder()
+                        .sendingUserId(user.getUserId())
+                        .targetUserId(targetUserId)
+                        .postId(post.getPostId())
+                        .boardName(post.getBoard().getName())
+                        .notificationType("대댓글")
+                        .content(requestDto.getContent())
+                        .build()
+                        .toEntity());
+                }
+            });
         }
 
 
