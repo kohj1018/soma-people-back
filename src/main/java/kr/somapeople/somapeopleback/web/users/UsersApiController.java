@@ -3,10 +3,7 @@ package kr.somapeople.somapeopleback.web.users;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.somapeople.somapeopleback.service.UsersService;
-import kr.somapeople.somapeopleback.web.users.dto.FirebaseTokenUpdateRequestDto;
-import kr.somapeople.somapeopleback.web.users.dto.UsersResponseDto;
-import kr.somapeople.somapeopleback.web.users.dto.UsersSaveRequestDto;
-import kr.somapeople.somapeopleback.web.users.dto.UsersUpdateRequestDto;
+import kr.somapeople.somapeopleback.web.users.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,5 +43,11 @@ public class UsersApiController {
     @PutMapping("/firebaseToken/{userId}")
     public void registerFirebaseToken(@PathVariable Long userId, @RequestBody FirebaseTokenUpdateRequestDto requestDto) {
         usersService.registerFirebaseToken(userId, requestDto.getFirebaseToken());
+    }
+
+    @Operation(summary = "유저 인증 처리하기 (관리자 계정으로만 가능)")
+    @PutMapping("/certification")
+    public void handleUserCertification(@RequestBody UserCertificationUpdateRequestDto requestDto) {
+        usersService.handleUserCertification(requestDto);
     }
 }

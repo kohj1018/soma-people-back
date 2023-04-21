@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @NoArgsConstructor
@@ -83,5 +84,13 @@ public class Users extends BaseTimeEntity {
 
     public void registerFirebaseToken(String firebaseToken) {
         this.firebaseToken = firebaseToken;
+    }
+
+    public void handleUserCertification() {
+        if (Objects.equals(this.userType, "준비생")) {
+            this.userType = "연수생";
+        }
+
+        this.isCertified = true;
     }
 }
