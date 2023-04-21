@@ -86,11 +86,18 @@ public class Users extends BaseTimeEntity {
         this.firebaseToken = firebaseToken;
     }
 
-    public void handleUserCertification() {
+    public void handleUserCertification(String nameToBeUpdated, Integer cardinalNumToBeUpdated) {
         if (Objects.equals(this.userType, "준비생")) {
             this.userType = "연수생";
         }
-
         this.isCertified = true;
+
+        if (!(nameToBeUpdated == null || nameToBeUpdated.isEmpty())) {
+            this.name = nameToBeUpdated;
+        }
+
+        if (cardinalNumToBeUpdated > 0) {
+            this.cardinalNum = cardinalNumToBeUpdated;
+        }
     }
 }

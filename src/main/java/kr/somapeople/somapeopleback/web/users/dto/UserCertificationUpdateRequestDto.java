@@ -9,10 +9,14 @@ import lombok.NoArgsConstructor;
 public class UserCertificationUpdateRequestDto {
     private String adminOauthId;
     private Long targetUserId;
+    private String nameToBeUpdated;
+    private Integer cardinalNumToBeUpdated;
 
     @Builder
-    public UserCertificationUpdateRequestDto(String adminOauthId, Long targetUserId) {
+    public UserCertificationUpdateRequestDto(String adminOauthId, Long targetUserId, String nameToBeUpdated, Integer cardinalNumToBeUpdated) {
         this.adminOauthId = adminOauthId;
         this.targetUserId = targetUserId;
+        this.nameToBeUpdated = nameToBeUpdated;
+        this.cardinalNumToBeUpdated = cardinalNumToBeUpdated;
     }
 }
